@@ -8,6 +8,7 @@ public class Book
     public string Title { get; set; } = null!;
     [Required]
     public string Author { get; set; } = null!;
-
     public bool isAvailable { get; set; } = true;
+
+    public string? CoverUrl { get; set; }
 }

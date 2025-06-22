@@ -132,3 +132,4 @@
 /Users/lucao/Documents/developer/RiderProjects/C#Directory/LibraryAPI/LibraryAPI/obj/Debug/net9.0/rjsmrazor.dswa.cache.json
 /Users/lucao/Documents/developer/RiderProjects/C#Directory/LibraryAPI/LibraryAPI/obj/Debug/net9.0/rjsmcshtml.dswa.cache.json
 /Users/lucao/Documents/developer/RiderProjects/C#Directory/LibraryAPI/LibraryAPI/obj/Debug/net9.0/staticwebassets.build.json.cache
+/Users/lucao/Documents/developer/RiderProjects/C#Directory/LibraryAPI/LibraryAPI/obj/Debug/net9.0/LibraryAPI.sourcelink.json
