@@ -12,7 +12,7 @@ builder.Services.AddDbContext<LibraryContext>(opt => opt.UseNpgsql(connectionStr
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
-        policy => policy.WithOrigins("http://localhost:3000", "https://book-nest-lemon.vercel.app/").AllowAnyMethod().AllowAnyHeader());
+        policy => policy.WithOrigins("http://localhost:3000", "https://book-nest-lemon.vercel.app").AllowAnyMethod().AllowAnyHeader());
 });
 
 // Add services to the container.
