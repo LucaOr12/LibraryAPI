@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
 
@@ -21,6 +22,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<LibraryContext>();
+    db.Database.Migrate(); // Questo applica tutte le migration pendenti
+}
 
 // Configure the HTTP request pipeline.
 app.UseSwagger();
