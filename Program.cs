@@ -11,8 +11,8 @@ builder.Services.AddDbContext<LibraryContext>(opt => opt.UseNpgsql(connectionStr
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowLocalHost3000",
-        policy => policy.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader());
+    options.AddPolicy("AllowFrontend",
+        policy => policy.WithOrigins("http://localhost:3000", "https://book-nest-lemon.vercel.app/").AllowAnyMethod().AllowAnyHeader());
 });
 
 // Add services to the container.
@@ -38,7 +38,7 @@ app.UseSwaggerUI(c =>
 });
 app.MapOpenApi();
 
-app.UseCors("AllowLocalHost3000");
+app.UseCors("AllowFrontend");
 
 
 app.UseAuthorization();
