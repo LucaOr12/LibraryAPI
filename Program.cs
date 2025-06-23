@@ -27,7 +27,7 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Library API V1");
-    c.RoutePrefix = "swagger"; // sarà disponibile su /swagger
+    c.RoutePrefix = "swagger"; 
 });
 app.MapOpenApi();
 
