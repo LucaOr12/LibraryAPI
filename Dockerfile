@@ -6,17 +6,22 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["LibraryAPI/LibraryAPI.csproj", "LibraryAPI/"]
-RUN dotnet restore "LibraryAPI/LibraryAPI.csproj"
+
+# Copia il progetto (modificato per usare il path reale)
+COPY ["LibraryAPI.csproj", "./"]
+RUN dotnet restore "LibraryAPI.csproj"
+
+# Copia tutto il codice sorgente
 COPY . .
-WORKDIR "/src/LibraryAPI"
-RUN dotnet build "./LibraryAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+# Build
+RUN dotnet build "LibraryAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./LibraryAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "LibraryAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "LibraryAPI.dll"]
