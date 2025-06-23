@@ -7,4 +7,4 @@ services:
     autoDeploy: true
     envVars:
       - key: ConnectionStrings__DefaultConnection
-        value: "postgres://library_db_zn5f_user:Jz662BHZzcB29Ue3dd1ZqC0y46Vyh77d@dpg-d1chtguuk2gs73aoful0-a/LibraryDB?sslmode=require"
+        value: "postgres://library_db_zn5f_user:Jz662BHZzcB29Ue3dd1ZqC0y46Vyh77d@dpg-d1chtguuk2gs73aoful0-a/library_db_zn5f?sslmode=require"
