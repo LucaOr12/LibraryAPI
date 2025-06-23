@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: library-api
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+    envVars:
+      - key: ConnectionStrings__Default
+        value: postgresql://library_db_zn5f_user:Jz662BHZzcB29Ue3dd1ZqC0y46Vyh77d@dpg-d1chtguuk2gs73aoful0-a/library_db_zn5f
