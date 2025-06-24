@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using LibraryAPI.Data;
+using LibraryAPI.DTOs;
 using LibraryAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,47 +16,56 @@ public class ReservationsController : ControllerBase
     public ReservationsController(LibraryContext context) => _context = context;
     
     [HttpGet]
-    public ActionResult<IEnumerable<Reservation>> GetReservations() => _context.Reservations.ToList();
+    public async Task<ActionResult<IEnumerable<Reservation>>> GetReservations() => await _context.Reservations.ToListAsync();
     
     [HttpGet("{id}")]
-    public ActionResult<Reservation> GetReservation(int id)
+    public async Task <ActionResult<Reservation>> GetReservation(int id)
     {
-        var reservation = _context.Reservations.Find(id);
+        var reservation = await _context.Reservations.FindAsync(id);
         return reservation == null ? NotFound() : Ok(reservation);
     }
     
     [HttpPost]
-    public ActionResult<Reservation> CreateReservation(Reservation reservation)
+    public async Task<ActionResult<Reservation>> CreateReservation(ReservationCreateDTO dto)
     {
-        var book = _context.Books.Find(reservation.BookId);
-        var user = _context.Users.Find(reservation.UserId);
-        if (book == null || user == null) return NotFound("Book or User not found.");
-        if (!book.isAvailable) return BadRequest("Book is not available.");
+        var book = await _context.Books.FindAsync(dto.BookId);
+        var user = await _context.Users.FindAsync(dto.UserId);
+        if(book == null || user == null)
+            return BadRequest("Invalid reservation");
+        if (!book.isAvailable)
+            return BadRequest("Book is not available");
+
+        var reservation = new Reservation
+        {
+            BookId = dto.BookId,
+            UserId = dto.UserId,
+            ReservedAt = DateTime.UtcNow,
+        };
         
-        book.isAvailable = false;
         _context.Reservations.Add(reservation);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         
         return CreatedAtAction(nameof(GetReservation), new { id = reservation.Id }, reservation);
     }
     
     [HttpPut("{id}")]
-    public IActionResult Update(int id, Reservation reservation)
+    public async Task <IActionResult> Update(int id, Reservation reservation)
     {
         if (id != reservation.Id) return BadRequest();
-        if(!_context.Reservations.Any(r => r.Id == id)) return NotFound();
+        var check = await _context.Reservations.AnyAsync(r => r.Id == id);
+        if(!check) return NotFound();
         _context.Entry(reservation).State = EntityState.Modified;
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return NoContent();
     }
     
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public async Task <IActionResult> Delete(int id)
     {
-        var reservation = _context.Reservations.Find(id);
+        var reservation = await _context.Reservations.FindAsync(id);
         if (reservation == null) return NotFound();
         _context.Reservations.Remove(reservation);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return NoContent();
     }
 }
