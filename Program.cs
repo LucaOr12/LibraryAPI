@@ -46,6 +46,21 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero,
         NameClaimType = ClaimTypes.NameIdentifier
     };
+    options.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            Console.WriteLine("Token INVALID: " + context.Exception.Message);
+            return Task.CompletedTask;
+        },
+        OnTokenValidated = context =>
+        {
+            Console.WriteLine("Token VALID");
+            foreach (var claim in context.Principal.Claims)
+                Console.WriteLine($"Claim: {claim.Type} => {claim.Value}");
+            return Task.CompletedTask;
+        }
+    };
 });
 
 
