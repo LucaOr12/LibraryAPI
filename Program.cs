@@ -21,6 +21,8 @@ builder.Services.AddCors(options =>
         policy => policy.WithOrigins("http://localhost:3000", "https://book-nest-lemon.vercel.app").AllowAnyMethod().AllowAnyHeader());
 });
 
+builder.Configuration.AddEnvironmentVariables();
+
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET") 
                 ?? jwtSettings["SecretKey"];
