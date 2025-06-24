@@ -72,11 +72,7 @@ app.UseSwaggerUI(c =>
 app.MapOpenApi();
 
 app.UseCors("AllowFrontend");
-app.Use(async (context, next) =>
-{
-    Console.WriteLine("Authorization header: " + context.Request.Headers["Authorization"].ToString());
-    await next();
-});
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
