@@ -33,7 +33,7 @@ public class ReservationsController : ControllerBase
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
         if(userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))return Unauthorized();
-        
+        Console.WriteLine($"UserId from token: {userIdClaim.Value}");
         var book = await _context.Books.FindAsync(dto.BookId);
         
         if(book == null) return BadRequest("Invalid reservation");

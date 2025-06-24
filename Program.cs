@@ -45,7 +45,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Add services to the container.
+
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -56,10 +56,10 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<LibraryContext>();
-    db.Database.Migrate(); // Questo applica tutte le migration pendenti
+    db.Database.Migrate();
 }
 
-// Configure the HTTP request pipeline.
+
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
