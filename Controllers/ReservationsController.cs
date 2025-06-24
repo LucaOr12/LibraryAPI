@@ -32,7 +32,7 @@ public class ReservationsController : ControllerBase
     public async Task<ActionResult<Reservation>> CreateReservation(ReservationCreateDTO dto)
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-        if(userIdClaim != null)return Unauthorized();
+        if(userIdClaim == null)return Unauthorized();
         
         var userId = int.Parse(userIdClaim.Value);
         var book = await _context.Books.FindAsync(dto.BookId);
