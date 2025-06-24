@@ -1,5 +1,9 @@
 using LibraryAPI.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using LibraryAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,10 +13,34 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<LibraryContext>(opt => opt.UseNpgsql(connectionString));
 
+builder.Services.AddScoped<IjwtService, JwtService>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
         policy => policy.WithOrigins("http://localhost:3000", "https://book-nest-lemon.vercel.app").AllowAnyMethod().AllowAnyHeader());
+});
+
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY") 
+                ?? builder.Configuration.GetSection("JwtSettings:SecretKey").Value;
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+        ClockSkew = TimeSpan.Zero
+    };
 });
 
 // Add services to the container.
@@ -40,8 +68,7 @@ app.MapOpenApi();
 
 app.UseCors("AllowFrontend");
 
-
+app.UseAuthentication();
 app.UseAuthorization();
-//app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
