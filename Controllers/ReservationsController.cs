@@ -27,7 +27,7 @@ public class ReservationsController : ControllerBase
         var reservation = await _context.Reservations.FindAsync(id);
         return reservation == null ? NotFound() : Ok(reservation);
     }
-    
+    [AllowAnonymous]
     [HttpPost]
     public async Task<ActionResult<Reservation>> CreateReservation(ReservationCreateDTO dto)
     {
