@@ -23,10 +23,8 @@ builder.Services.AddCors(options =>
 
 builder.Configuration.AddEnvironmentVariables();
 
-var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET") 
-                ?? jwtSettings["SecretKey"];
-Console.WriteLine($"JWT_SECRET: {secretKey}");
+
+var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET");
 if (string.IsNullOrEmpty(secretKey))
     throw new Exception("JWT_SECRET KEY is missing");
 
