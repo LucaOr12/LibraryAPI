@@ -24,7 +24,10 @@ public class JwtService : IjwtService
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Name, user.Name),
         };
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+        var secret = _configuration["JWT_SECRET"];
+        if (string.IsNullOrEmpty(secret))
+            throw new InvalidOperationException("JWT_SECRET is missing");
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
