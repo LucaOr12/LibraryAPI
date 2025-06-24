@@ -21,12 +21,14 @@ public class JwtService : IjwtService
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim("userId", user.Id.ToString()),
             new Claim(ClaimTypes.Name, user.Name),
         };
+
         var secret = _configuration["JWT_SECRET"];
         if (string.IsNullOrEmpty(secret))
             throw new InvalidOperationException("JWT_SECRET is missing");
+
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -36,7 +38,8 @@ public class JwtService : IjwtService
             claims: claims,
             expires: DateTime.Now.AddHours(1),
             signingCredentials: creds
-            );
+        );
+
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

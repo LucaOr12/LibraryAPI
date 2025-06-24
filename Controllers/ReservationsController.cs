@@ -31,7 +31,7 @@ public class ReservationsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Reservation>> CreateReservation(ReservationCreateDTO dto)
     {
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+        var userIdClaim = User.FindFirst("userId");
         if(userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))return Unauthorized();
         Console.WriteLine($"UserId from token: {userIdClaim.Value}");
         var book = await _context.Books.FindAsync(dto.BookId);
