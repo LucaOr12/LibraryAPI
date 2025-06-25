@@ -101,6 +101,26 @@ public class UserController : ControllerBase
         };
         return Ok(new { token, user = userDto });
     }
+
+    [HttpPost("refresh-token")]
+    public async Task<ActionResult<object>> RefreshToken()
+    {
+        var userIdClaim = User.FindFirst("userId");
+        if(userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))return Unauthorized();
+
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null) return Unauthorized();
+
+        var newToken = _jwtService.GenerateJwtToken(user);
+
+        var userDto = new UserDTO
+        {
+            Name = user.Name,
+            Email = user.Email
+        };
+
+        return Ok(new { token = newToken, user = userDto });
+    }
     
     [HttpPut("{id}")]
     public async Task <IActionResult> Update(int id, UserDTO userDto)
