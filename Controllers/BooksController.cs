@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using LibraryAPI.Data;
 using LibraryAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -15,6 +16,13 @@ public class BooksController : ControllerBase
    
    [HttpGet]
    public ActionResult<IEnumerable<Book>> GetBooks() => _context.Books.ToList();
+   
+   [AllowAnonymous]
+   [HttpGet("ping")]
+   public IActionResult Ping()
+   {
+      return Ok("I'm awake!");
+   }
 
    [HttpGet("{id}")]
    public ActionResult<Book> GetBooks(int id)
