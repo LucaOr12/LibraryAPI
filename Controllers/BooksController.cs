@@ -17,12 +17,9 @@ public class BooksController : ControllerBase
    [HttpGet]
    public ActionResult<IEnumerable<Book>> GetBooks() => _context.Books.ToList();
    
+   [HttpGet("ping"), HttpHead("ping")]
    [AllowAnonymous]
-   [HttpGet("ping")]
-   public IActionResult Ping()
-   {
-      return Ok("I'm awake!");
-   }
+   public IActionResult Ping() => Ok("Library API is alive");
 
    [HttpGet("{id}")]
    public ActionResult<Book> GetBooks(int id)
